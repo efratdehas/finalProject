@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../context/UserContext';
 import './UserDetailsForm.css';
 
-const UserDetailsForm = ({ isNewUser, currentUser, setCurrentUser }) => {
+const UserDetailsForm = ({ isNewUser }) => {
+
     const navigate = useNavigate();
+    const { currentUser, setCurrentUser } = useUser();
 
     // Initialize state with currentUser props or empty values
     const [formData, setFormData] = useState({
@@ -29,6 +32,7 @@ const UserDetailsForm = ({ isNewUser, currentUser, setCurrentUser }) => {
             bs: currentUser?.company?.bs || ''
         }
     });
+    const [message, setMessage] = useState(null);
 
     // Handle input changes for both top-level and nested properties
     const handleChange = (e) => {
@@ -60,48 +64,65 @@ const UserDetailsForm = ({ isNewUser, currentUser, setCurrentUser }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        let dataToSend = { ...formData };
+
+        if (isNewUser) {
+            delete dataToSend.id;
+        }
+
         try {
-            const url = isNewUser 
-                ? 'http://localhost:3000/users' 
-                : `http://localhost:3000/users/${formData.id}`;
+            const url = isNewUser ? 'http://localhost:3000/users' : `http://localhost:3000/users/${formData.id}`;
             const method = isNewUser ? 'POST' : 'PATCH';
 
             const response = await fetch(url, {
                 method: method,
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData)
+                body: JSON.stringify(dataToSend)
             });
 
             if (response.ok) {
                 const savedUser = await response.json();
-                
+
                 // Synchronize global state and storage
                 setCurrentUser(savedUser);
                 localStorage.setItem('currentUser', JSON.stringify(savedUser));
-                
-                alert(isNewUser ? 'Registration successful!' : 'Profile updated!');
-                if (isNewUser) navigate('/home');
+
+                setMessage(isNewUser ? 'Registration successful!' : 'Profile updated!');
+
+                setTimeout(() => {
+                    setMessage(null);
+                    isNewUser ? navigate(`/users/${savedUser.id}`) : navigate(`/users/${savedUser.id}/info`);
+                }, 1000);
+
             }
-        } catch (err) { 
-            console.error("Submission error:", err); 
+        } catch (err) {
+            console.error("Submission error:", err);
+
+            setMessage('An error occurred. Please try again.');
+
+            setTimeout(() => {
+                setMessage(null);
+            }, 1000);
         }
     };
 
     return (
         <div className="form-container">
+            {(message &&
+                <div className="overlay">
+                    <div className="small-square">
+                        <p>{message}</p>
+                    </div>
+                </div>
+            )}
+
             <h2>{isNewUser ? 'Complete Registration' : 'Edit Profile'}</h2>
             <form onSubmit={handleSubmit} className="user-details-form">
 
                 {/* General Information Section */}
                 <section className="form-section">
                     <h3>General Info</h3>
-                    <input 
-                        name="username" 
-                        value={formData.username} 
-                        placeholder="Username" 
-                        disabled 
-                        title="Username cannot be changed" 
-                    />
+                    <input name="username" value={formData.username} placeholder="Username" disabled title="Username cannot be changed" />
                     <input name="name" value={formData.name} placeholder="Full Name" onChange={handleChange} required />
                     <input name="email" value={formData.email} type="email" placeholder="Email" onChange={handleChange} required />
                     <div className="input-row">

@@ -15,7 +15,7 @@ body {
 
 .loginContainer h2 {
     color: #6d0f0f;
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     margin-bottom: 24px;
     font-size: 28px;
 }
@@ -35,12 +35,19 @@ body {
     outline: none;
     transition: 0.2s all ease-in-out;
     background-color: #f4f1f2;
+    color: #000000;
+}
+
+.loginContainer input::placeholder {
     color: #a79797;
 }
 
-.loginContainer input:focus {
-    border-color: #a05151;
-    box-shadow: 0 0 6px #a79797;
+.loginContainer input:-webkit-autofill,
+.loginContainer input:-webkit-autofill:hover,
+.loginContainer input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #000000;
+    -webkit-box-shadow: 0 0 0px 1000px #f4f1f2 inset;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
 .loginContainer button[type="submit"] {
@@ -60,7 +67,7 @@ body {
 }
 
 .loginContainer p {
-    background-color: #ffffff;
+    background-color: #f9f9f9;
     margin-top: 18px;
     font-size: 14px;
     color: #000000;

@@ -1,10 +1,12 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useUser } from '../../context/UserContext';
 import './Login.css';
 
-const Login = ({ setCurrentUser }) => {
+const Login = () => {
 
     const navigate = useNavigate();
+    const { setCurrentUser } = useUser();
 
     // Local state to manage credentials and authentication feedback
     const [formData, setFormData] = useState({
@@ -12,6 +14,8 @@ const Login = ({ setCurrentUser }) => {
         password: '',
         error: null
     });
+
+    const [message, setMessage] = useState(null);
 
     // Synchronize input changes with local state
     const handleChange = (e) => {
@@ -39,21 +43,41 @@ const Login = ({ setCurrentUser }) => {
                     // Update global app state
                     setCurrentUser(user);
 
-                    // Redirect to the home dashboard
-                    navigate('/home');
-                    return; // Exit to prevent setting the error state below
-                } 
+                    setMessage('Connection successful!');
+
+                    setTimeout(() => {
+                        setMessage(null);
+                        navigate(`/users/${user.id}`);
+                    }, 1000);
+
+                    return;
+                }
             }
         } catch (error) {
             console.error('Error connecting to server: ', error);
+
+            setMessage('An error occurred. Please try again.');
+
+            setTimeout(() => {
+                setMessage(null);
+            }, 1000);
         }
-        
+
         // Display error message if authentication fails
         setFormData({ ...formData, error: 'Invalid username or password' });
     }
 
     return (
         <div className="loginContainer">
+
+            {(message &&
+                <div className="overlay">
+                    <div className="small-square">
+                        <p>{message}</p>
+                    </div>
+                </div>
+            )}
+
             <h2>Login</h2>
             <form onSubmit={handleSubmit}>
 

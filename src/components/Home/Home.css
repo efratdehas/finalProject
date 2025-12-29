@@ -1,0 +1,270 @@
+/* .home-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    direction: ltr;
+}
+
+.top-navbar {
+    height: 70px;
+    background-color: #fcfcfc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    border-bottom: 1px solid #e0dada;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.nav-logo {
+    height: 40px;
+}
+
+.nav-center {
+    flex-direction: row;
+    display: flex;
+}
+
+.nav-link {
+    margin: 5px;
+    padding: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+    background-color: transparent;
+    color: #6d0f0f;
+    text-align: left;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #EEDBD6;
+    width: 150px;
+    gap: 10px;
+    transition: background-color 0.4s ease;
+}
+
+.nav-link:hover {
+    color: white;
+    background-color: #a05151;
+    box-shadow: 0 2px 8px rgba(109, 15, 15, 0.2);
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+}
+
+.nav-icon-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6d0f0f;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.nav-icon-btn:hover {
+    background-color: #f4f1f2;
+}
+
+.content-layout {
+    margin-top: 70px;
+    display: flex;
+    flex: 1;
+}
+
+.sidebar-overlay {
+    width: 250px;
+    background-color: #f4f1f2;
+    border-right: 1px solid #e0dada;
+    height: calc(100vh - 70px);
+    transition: all 0.4s ease;
+    overflow: hidden;
+}
+
+.sidebar-overlay.closed {
+    width: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.sidebar-links {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 220px;
+}
+
+.sidebar-links button {
+    padding: 15px;
+    background: none;
+    border: none;
+    text-align: left;
+    color: #6d0f0f;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.sidebar-links button:hover {
+    background-color: #EEDBD6;
+}
+
+.logout-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.main-viewport {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+} */
+
+.home-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    direction: ltr;
+}
+
+.top-navbar {
+    height: 70px;
+    background-color: #fcfcfc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    border-bottom: 1px solid #e0dada;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.nav-left {
+    display: flex;
+    align-items: center;
+}
+
+.nav-logo {
+    height: 40px;
+}
+
+/* --- אפקט השאיבה למרכז ימין --- */
+.nav-center {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    align-items: center;
+    transform-origin: right center;
+    /* נקודת השאיבה */
+    transition:
+        transform 0.5s cubic-bezier(0.7, 0, 0.3, 1),
+        opacity 0.4s ease,
+        width 0.5s cubic-bezier(0.7, 0, 0.3, 1),
+        gap 0.5s ease;
+}
+
+.nav-center.closed {
+    opacity: 0;
+    width: 0;
+    gap: 0;
+    pointer-events: none;
+    margin: 0;
+}
+
+.nav-center.open {
+    transform: scale(1);
+    opacity: 1;
+    width: auto;
+}
+
+.nav-link {
+    padding: 10px 20px;
+    border: none;
+    background-color: #EEDBD6;
+    color: #6d0f0f;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: white;
+    background-color: #a05151;
+    box-shadow: 0 2px 8px rgba(109, 15, 15, 0.2);
+}
+
+.nav-right {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav-icon-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #6d0f0f;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.3s;
+}
+
+.nav-icon-btn:hover {
+    background-color: #f4f1f2;
+}
+
+/* אנימציה לאייקון עצמו */
+.menu-toggle {
+    transition: transform 0.4s ease;
+}
+
+.menu-toggle.active {
+    transform: rotate(90deg);
+}
+
+.logout-icon {
+    width: 24px;
+    height: 24px;
+}
+
+.content-layout {
+    margin-top: 70px;
+    display: flex;
+    flex: 1;
+}
+
+.main-viewport {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+}

@@ -1,181 +1,168 @@
-/* .form-container {
-    width: 600px;
-    margin: 40px auto;
-    padding: 40px 30px;
-    background-color: #fdfdfd;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-radius: 16px;
-    text-align: left;
-    direction: ltr;
-}
-
-.form-container rtl {
-    direction: rtl;
-}
-
-.form-container h2 {
-    color: #000000;
-    margin-bottom: 24px;
-    font-size: 26px;
-    text-align: center;
-}
-
-.user-details-form {
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-}
-
-.form-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.form-section h3 {
-    font-size: 18px;
-    color: #c2a8a1;
-    margin-bottom: 10px;
-    border-left: 4px solid #EEDBD6; 
-    padding-left: 10px;
-    border-right: none;
-    padding-right: 0;
-}
-
-.input-row {
-    display: flex;
-    gap: 15px;
-}
-
-.input-row input {
-    flex: 1;
-}
-
-.form-container input {
-    padding: 12px 14px;
-    border: 1px solid #ccc;
-    border-radius: 12px;
-    font-size: 15px;
-    outline: none;
-    transition: 0.2s all ease-in-out;
-    background-color: #fff;
-}
-
-.form-container input:focus {
-    border-color: #EEDBD6;
-    box-shadow: 0 0 6px #c2a8a1;
-}
-
-.form-container input:disabled {
-    background-color: #f0f0f0;
-    cursor: not-allowed;
-    color: #888;
-}
-
-.form-container button[type="submit"] {
-    padding: 14px 0;
-    background-color: #EEDBD6;
-    color: #000;
-    border: none;
-    border-radius: 12px;
-    font-size: 17px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.2s all ease-in-out;
-    margin-top: 10px;
-}
-
-.form-container button[type="submit"]:hover {
-    color: #fff;
-    background-color: #c2a8a1;
-} */
-
 .form-container {
-    width: 600px;
-    margin: 40px auto;
-    padding: 40px 30px;
-    background-color: #f9f9f9; /* רקע האתר שבחרת */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border-radius: 16px;
+    width: 620px;
+    margin: 50px auto;
+    padding: 45px 40px;
+    background-color: #fcfcfc;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border-radius: 20px;
     text-align: left;
     direction: ltr;
+    border: 1px solid #f0e6e6;
 }
 
 .form-container h2 {
-    color: #6d0f0f; /* כותרת ראשית */
-    margin-bottom: 24px;
-    font-size: 26px;
+    color: #6d0f0f;
+    margin-bottom: 30px;
+    font-size: 30px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     text-align: center;
 }
 
 .user-details-form {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 20px;
 }
 
 .form-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #eee;
+    gap: 15px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #f4eeee;
+    transition: transform 0.2s ease;
+}
+
+.form-section:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(109, 15, 15, 0.03);
 }
 
 .form-section h3 {
-    font-size: 18px;
-    color: #a05151; /* כותרת משנה */
-    margin-bottom: 10px;
-    border-left: 4px solid #a05151; /* קו דגש בצבע כותרת משנה */
-    padding-left: 10px;
+    font-size: 16px;
+    color: #a05151;
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-left: 4px solid #a05151;
+    padding-left: 12px;
+    letter-spacing: 0.5px;
 }
 
-/* השארת מבנה האינפוט הכללי עם הצבעים החדשים */
+.input-row input{
+    margin-bottom: 15px;
+}
 .form-container input {
-    padding: 12px 14px;
-    border: 1px solid #ccc;
-    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1.5px solid #e0dada;
+    border-radius: 10px;
     font-size: 15px;
     outline: none;
-    transition: 0.2s all ease-in-out;
-    background-color: #f4f1f2; /* צבע תיבות הטקסט שבחרת */
-    color: #a79797; /* צבע הטקסט שבחרת */
+    transition: all 0.3s ease;
+    background-color: #f9f7f8;
+    color: #2c2c2c;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-/* הגדרת השדה הכבוי (Username) בצבע אפור */
-.form-container input:disabled {
-    background-color: #e9e9e9; /* אפור בהיר המעיד על שדה כבוי */
-    cursor: not-allowed; /* שינוי הסמן לאיסור כניסה */
-    color: #888888; /* טקסט אפור כהה יותר לקריאות */
-    border: 1px solid #dddddd;
+.form-container input:-webkit-autofill,
+.form-container input:-webkit-autofill:hover,
+.form-container input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #2c2c2c;
+    -webkit-box-shadow: 0 0 0px 1000px #f9f7f8 inset;
+    transition: background-color 5000s ease-in-out 0s;
 }
 
-/* התאמה לצבע הטקסט גם עבור placeholder */
 .form-container input::placeholder {
     color: #a79797;
-    opacity: 0.7;
+    opacity: 0.6;
 }
 
 .form-container input:focus {
     border-color: #a05151;
-    box-shadow: 0 0 6px rgba(160, 81, 81, 0.2);
+    background-color: #fff;
+    box-shadow: 0 0 8px rgba(160, 81, 81, 0.15);
+}
+
+.form-container input:disabled {
+    background-color: #ececec;
+    color: #777;
+    border-color: #ddd;
+    cursor: not-allowed;
+    opacity: 0.8;
 }
 
 .form-container button[type="submit"] {
-    padding: 14px 0;
-    background-color: #6d0f0f; /* כפתור בצבע כותרת ראשית */
+    padding: 16px 0;
+    background-color: #6d0f0f;
     color: #ffffff;
     border: none;
     border-radius: 12px;
-    font-size: 17px;
-    font-weight: bold;
+    font-size: 18px;
+    font-weight: 700;
     cursor: pointer;
-    transition: 0.2s all ease-in-out;
-    margin-top: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 20px;
+    box-shadow: 0 4px 10px rgba(109, 15, 15, 0.2);
 }
 
 .form-container button[type="submit"]:hover {
-    background-color: #a05151; /* מעבר לצבע כותרת משנה */
+    background-color: #a05151;
+    transform: scale(1.02);
+    box-shadow: 0 6px 15px rgba(160, 81, 81, 0.3);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(44, 44, 44, 0.6);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.small-square {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border-top: 3px solid #6d0f0f;
+    border-right: 3px solid #6d0f0f;
+}
+
+.small-square p {
+    color: #6d0f0f;
+    font-weight: 600;
+    font-size: 18px;
+    margin: 0;
+}
+
+.small-square button {
+    margin-top: 15px;
+    padding: 8px 20px;
+    background-color: transparent;
+    color: #6d0f0f;
+    border: 1.5px solid #6d0f0f;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(109, 15, 15, 0.2);
+}
+
+.small-square button:hover {
+    background-color: #6d0f0f;
+    color: #ffffff;
+    box-shadow: 0 4px 8px rgba(109, 15, 15, 0.2);
 }

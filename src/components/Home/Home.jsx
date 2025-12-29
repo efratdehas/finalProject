@@ -1,9 +1,66 @@
+import { useState } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
+import { useUser } from '../../context/UserContext';
 import './Home.css';
 
-const Home = ({ currentUser }) => {
+const Home = () => {
+    const navigate = useNavigate();
+    const { currentUser } = useUser();
+
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
+
+    const handleLogout = () => {
+        localStorage.removeItem('currentUser');
+        window.location.reload();
+    };
+
     return (
-        <p>currentUser: {currentUser.username}</p>
+        <div className="home-container">
+            <nav className="top-navbar">
+                {/* צד שמאל: לוגו */}
+                <div
+                    className="nav-left"
+                    onClick={() => navigate(`/users/${currentUser?.id}`)}
+                    style={{ cursor: 'pointer' }}
+                >
+                    <img src="/logo.png" alt="Logo" className="nav-logo" />
+                </div>
+
+                {/* מרכז: תפריט (יוצג רק אם isMenuOpen נכון) */}
+                {isMenuOpen && (
+                    <div className={`nav-center ${isMenuOpen ? 'open' : 'closed'}`}>
+                        <button className="nav-link" onClick={() => navigate('info')}>Profile</button>
+                        <button className="nav-link" onClick={() => navigate('todos')}>Todos</button>
+                        <button className="nav-link" onClick={() => navigate('posts')}>Posts</button>
+                        <button className="nav-link" onClick={() => navigate('albums')}>Albums</button>
+                    </div>
+                )}
+
+                <div className="nav-right">
+
+                    <button
+                        className={`nav-icon-btn menu-toggle ${isMenuOpen ? 'active' : ''}`}
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    >
+                        {isMenuOpen ? '✕' : '☰'}
+                    </button>
+
+                    <button className="nav-icon-btn" onClick={() => handleLogout()}>
+                        <img src="/logOutIcon.png" alt="Logout" className="logout-icon" />
+                    </button>
+                </div>
+            </nav>
+
+            <div className="content-layout">
+                {/* תוכן מרכזי */}
+                <main className="main-viewport">
+
+                    <Outlet />
+                </main>
+            </div>
+        </div>
     );
 };
+
 
 export default Home;
