@@ -1,4 +1,4 @@
-.form-container {
+/* .form-container {
     width: 600px;
     margin: 40px auto;
     padding: 40px 30px;
@@ -90,4 +90,92 @@
 .form-container button[type="submit"]:hover {
     color: #fff;
     background-color: #c2a8a1;
+} */
+
+.form-container {
+    width: 600px;
+    margin: 40px auto;
+    padding: 40px 30px;
+    background-color: #f9f9f9; /* רקע האתר שבחרת */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    text-align: left;
+    direction: ltr;
+}
+
+.form-container h2 {
+    color: #6d0f0f; /* כותרת ראשית */
+    margin-bottom: 24px;
+    font-size: 26px;
+    text-align: center;
+}
+
+.user-details-form {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.form-section h3 {
+    font-size: 18px;
+    color: #a05151; /* כותרת משנה */
+    margin-bottom: 10px;
+    border-left: 4px solid #a05151; /* קו דגש בצבע כותרת משנה */
+    padding-left: 10px;
+}
+
+/* השארת מבנה האינפוט הכללי עם הצבעים החדשים */
+.form-container input {
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-size: 15px;
+    outline: none;
+    transition: 0.2s all ease-in-out;
+    background-color: #f4f1f2; /* צבע תיבות הטקסט שבחרת */
+    color: #a79797; /* צבע הטקסט שבחרת */
+}
+
+/* הגדרת השדה הכבוי (Username) בצבע אפור */
+.form-container input:disabled {
+    background-color: #e9e9e9; /* אפור בהיר המעיד על שדה כבוי */
+    cursor: not-allowed; /* שינוי הסמן לאיסור כניסה */
+    color: #888888; /* טקסט אפור כהה יותר לקריאות */
+    border: 1px solid #dddddd;
+}
+
+/* התאמה לצבע הטקסט גם עבור placeholder */
+.form-container input::placeholder {
+    color: #a79797;
+    opacity: 0.7;
+}
+
+.form-container input:focus {
+    border-color: #a05151;
+    box-shadow: 0 0 6px rgba(160, 81, 81, 0.2);
+}
+
+.form-container button[type="submit"] {
+    padding: 14px 0;
+    background-color: #6d0f0f; /* כפתור בצבע כותרת ראשית */
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.2s all ease-in-out;
+    margin-top: 10px;
+}
+
+.form-container button[type="submit"]:hover {
+    background-color: #a05151; /* מעבר לצבע כותרת משנה */
 }

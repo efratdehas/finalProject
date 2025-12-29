@@ -1,21 +1,20 @@
 body {
     font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
 }
 
 .loginContainer {
     width: 360px;
     margin: 80px auto;
-    margin-left: 550px;
     padding: 40px 30px;
-    background-color: #fdfdfd;
+    background-color: #f9f9f9;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
     text-align: center;
-    transition: all 0.3s ease-in-out;
 }
 
 .loginContainer h2 {
-    color: #000000;
+    color: #6d0f0f;
     background-color: #ffffff;
     margin-bottom: 24px;
     font-size: 28px;
@@ -35,17 +34,19 @@ body {
     font-size: 16px;
     outline: none;
     transition: 0.2s all ease-in-out;
+    background-color: #f4f1f2;
+    color: #a79797;
 }
 
 .loginContainer input:focus {
-    border-color: #EEDBD6;
-    box-shadow: 0 0 6px #c2a8a1;
+    border-color: #a05151;
+    box-shadow: 0 0 6px #a79797;
 }
 
 .loginContainer button[type="submit"] {
     padding: 12px 0;
-    background-color: #EEDBD6;
-    color: rgb(0, 0, 0);
+    background-color: #6d0f0f;
+    color: #ffffff;
     border: none;
     border-radius: 12px;
     font-size: 16px;
@@ -54,8 +55,8 @@ body {
 }
 
 .loginContainer button[type="submit"]:hover {
-    color: rgb(255, 255, 255);
-    background-color: #c2a8a1;
+    background-color: #a05151;
+    box-shadow: 0 2px 8px rgba(109, 15, 15, 0.2);
 }
 
 .loginContainer p {
@@ -68,7 +69,7 @@ body {
 .loginContainer p button {
     background: none;
     border: none;
-    color: #c2a8a1;
+    color: #a05151;
     cursor: pointer;
     font-weight: bold;
     transition: 0.2s color ease-in-out;
