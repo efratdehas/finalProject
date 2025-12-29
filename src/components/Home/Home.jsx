@@ -23,10 +23,10 @@ const Home = () => {
                     onClick={() => navigate(`/users/${currentUser?.id}`)}
                     style={{ cursor: 'pointer' }}
                 >
-                    <img src="/logo.png" alt="Logo" className="nav-logo" />
+                    <img src="/logoIcon.png" alt="Logo Icon" className="nav-logo-icon" />
+                    <img src="/logoText.png" alt="logo text" className="nav-logo-text" />
                 </div>
 
-                {/* מרכז: תפריט (יוצג רק אם isMenuOpen נכון) */}
                 {isMenuOpen && (
                     <div className={`nav-center ${isMenuOpen ? 'open' : 'closed'}`}>
                         <button className="nav-link" onClick={() => navigate('info')}>Profile</button>
