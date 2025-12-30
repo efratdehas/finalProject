@@ -6,18 +6,23 @@ import TodoItem from '../TodoItem/TodoItem';
 import './Todos.css';
 
 const Todos = () => {
+    // שליפת הפרמטרים מה-URL
     const { todoId } = useParams();
+    // שליפת המשתמש הנוכחי מהקונטקסט
     const { currentUser } = UserContext();
-
+    // שליפת הנתונים והפונקציות מהקונטקסט של המשימות
     const { allTodos, setAllTodos, dataChanged, setDataChanged } = TodosContext();
 
+    // מצב מקומי לניהול תצוגת המשימות, מיון וחיפוש
     const [displayState, setDisplayState] = useState({
         displayedTodos: [],
         sortBy: 'id',
         searchQuery: ''
     });
 
+    // טעינת המשימות כאשר המשתמש הנוכחי משתנה
     useEffect(() => {
+        // פונקציה אסינכרונית לטעינת המשימות
         const fetchTodos = async () => {
             try {
                 const response = await fetch(`http://localhost:3000/todos?userId=${currentUser.id}`);
@@ -30,20 +35,26 @@ const Todos = () => {
                 }));
             } catch (err) {
                 console.error("Failed to fetch todos:", err);
+                alert("Somesing went wrong. Please try again later.");
             }
         };
         if (currentUser?.id) fetchTodos();
     }, [currentUser?.id]);
 
+    // עדכון התצוגה כאשר יש שינוי בנתונים הגלובליים
     useEffect(() => {
-        handleSearch();
-        if (dataChanged) setDataChanged(false);
+        if (dataChanged) {
+            handleSearch();
+            setDataChanged(false);
+        }
     }, [dataChanged, allTodos]);
 
+    // פונקציה למיון הנתונים לפי קריטריון מסוים
     const sortData = (data, criteria) => {
         return [...data].sort((a, b) => a[criteria] < b[criteria] ? -1 : 1);
     };
 
+    // פונקציה לטיפול בחיפוש
     const handleSearch = () => {
         const filtered = allTodos.filter(todo =>
             todo.title.toLowerCase().includes(displayState.searchQuery.toLowerCase())
@@ -54,6 +65,7 @@ const Todos = () => {
         }));
     };
 
+    // טיפול בשינוי המיון
     const handleSortChange = (e) => {
         const newSortBy = e.target.value;
         setDisplayState(prev => {
@@ -62,7 +74,9 @@ const Todos = () => {
         });
     };
 
+    // פונקציה למחיקת משימה
     const handleDelete = async (id) => {
+        // טיפול במקרה של משימה חדשה שעוד לא נשמרה
         if (!id) {
             setDisplayState(prev => ({
                 ...prev,
@@ -83,19 +97,23 @@ const Todos = () => {
             }
         } catch (err) {
             console.error("Error deleting todo:", err);
+            alert("Somesing went wrong. Please try again later.");
         }
     };
 
     return (
         <div className={'todos-container' + (todoId ? ' disabled-view' : '')}>
+            {/* כותרת עם סרגל חיפוש וכפתור הוספת משימה חדשה */}
             <header className="todos-header">
                 <div className="search-bar">
+                    {/* בחירת קריטריון המיון */}
                     <select value={displayState.sortBy} onChange={handleSortChange}>
                         <option value="id">ID</option>
                         <option value="title">Title</option>
                         <option value="completed">Execution</option>
                     </select>
 
+                    {/* שדה חיפוש עם כפתור ניקוי */}
                     <div className="search-input-wrapper">
                         <input
                             type="text"
@@ -106,7 +124,7 @@ const Todos = () => {
                         {displayState.searchQuery && (
                             <button className="clear-btn" onClick={() => {
                                 setDisplayState(prev => ({ ...prev, searchQuery: '' }));
-                                setDataChanged(true); // עדכון שיציג הכל שוב
+                                setDataChanged(true);
                             }}>X</button>
                         )}
                     </div>

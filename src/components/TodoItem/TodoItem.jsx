@@ -42,7 +42,7 @@ const TodoItem = ({ todo, onDelete }) => {
                     setAllTodos(prev => prev.map(t => t.id === savedTodo.id ? savedTodo : t));
                 }
                 setEditState(prev => ({ ...prev, isEditing: false }));
-                setDataChanged(prev => !prev);
+                setDataChanged(true);
             }
         } catch (err) {
             console.error("Save failed:", err);
@@ -58,10 +58,35 @@ const TodoItem = ({ todo, onDelete }) => {
         }
     };
 
+    const handleToggleStatus = async () => {
+        if (!todo.id) return;
+
+        const updatedTodo = {
+            ...todo,
+            completed: !todo.completed
+        };
+
+        try {
+            const response = await fetch(`http://localhost:3000/todos/${todo.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTodo)
+            });
+
+            if (response.ok) {
+                const savedTodo = await response.json();
+                setAllTodos(prev => prev.map(t => t.id === savedTodo.id ? savedTodo : t));
+                setDataChanged(true);
+            }
+        } catch (err) {
+            console.error("Failed to update status:", err);
+        }
+    };
+
     return (
         <div className={`todo-item ${editState.isEditing ? 'editing-mode' : ''}`}>
             <div className="todo-content">
-                {!editState.isEditing && <input type="checkbox" checked={todo.completed} readOnly />}
+                {!editState.isEditing && <input type="checkbox" checked={todo.completed} onChange={handleToggleStatus} />}
 
                 {editState.isEditing ? (
                     <input
