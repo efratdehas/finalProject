@@ -1,17 +1,17 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { useUser } from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import './Login.css';
 
 const Login = () => {
 
     const navigate = useNavigate();
-    const { setCurrentUser } = useUser();
+    const { setCurrentUser } = UserContext();
 
     // Local state to manage credentials and authentication feedback
     const [formData, setFormData] = useState({
         username: '',
-        password: '',
+        password:'',
         error: null
     });
 

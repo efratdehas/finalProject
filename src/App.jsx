@@ -59,20 +59,21 @@
 
 
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { UserProvider, useUser } from './context/UserContext'; // שימי לב לייבוא
+import { UserProvider, UserContext } from './context/UserContext';
+import { TodosProvider } from './context/TodosContext';
 
 import Login from './components/Login/Login'
 import Register from './components/Register/Register'
 import Home from './components/Home/Home'
 import UserDetailsForm from './components/UserDetailsForm/UserDetailsForm'
+import Info from './components/Info/Info'
 import Todos from './components/Todos/Todos'
 import Posts from './components/Posts/Posts'
 import Albums from './components/Albums/Albums'
-import Info from './components/Info/Info'
 import './App.css'
 
 function AppRoutes() {
-  const { currentUser } = useUser();
+  const { currentUser } = UserContext();
 
   return (
     <Routes>
@@ -90,8 +91,8 @@ function AppRoutes() {
         path="/users/:id"
         element={currentUser ? <Home /> : <Navigate to="/login" />}
       >
-        <Route index element={<h1 style={{color: '#6d0f0f'}}>Hi, {currentUser?.name || 'User'}!</h1>} />
-        <Route path="todos" element={<Todos />} />
+        <Route index element={<h1 style={{ color: '#6d0f0f' }}>Hi, {currentUser?.name || 'User'}!</h1>} />
+        <Route path="todos" element={<TodosProvider><Todos /></TodosProvider>}/>
         <Route path="posts" element={<Posts />} />
         <Route path="albums" element={<Albums />} />
         <Route path="info" element={<Info />} />
@@ -105,7 +106,7 @@ function App() {
   return (
     <UserProvider>
       <BrowserRouter>
-        <AppRoutes /> 
+        <AppRoutes />
       </BrowserRouter>
     </UserProvider>
   );

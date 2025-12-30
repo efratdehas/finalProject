@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import './Home.css';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { currentUser } = useUser();
+    const { currentUser } = UserContext();
 
     const [isMenuOpen, setIsMenuOpen] = useState(true);
 
@@ -54,7 +54,6 @@ const Home = () => {
             <div className="content-layout">
                 {/* תוכן מרכזי */}
                 <main className="main-viewport">
-
                     <Outlet />
                 </main>
             </div>

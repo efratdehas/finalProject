@@ -1,11 +1,11 @@
 import { useNavigate, Outlet } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import './Info.css';
 
 const Info = () => {
     
     const navigate = useNavigate();
-    const { currentUser } = useUser(); // שליפה ישירה
+    const { currentUser } = UserContext(); // שליפה ישירה
 
     if (!currentUser) return <p>Loading...</p>;
 

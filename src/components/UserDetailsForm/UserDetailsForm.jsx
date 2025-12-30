@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import './UserDetailsForm.css';
 
 const UserDetailsForm = ({ isNewUser }) => {
 
     const navigate = useNavigate();
-    const { currentUser, setCurrentUser } = useUser();
+    const { currentUser, setCurrentUser } = UserContext();
 
     // Initialize state with currentUser props or empty values
     const [formData, setFormData] = useState({

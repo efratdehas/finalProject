@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { UserContext } from '../../context/UserContext';
 import './Register.css';
 
 const Register = () => {
 
     const navigate = useNavigate();
-    const { setCurrentUser } = useUser();
+    const { setCurrentUser } = UserContext();
 
     // Local state to manage form inputs and validation errors
     const [formData, setFormData] = useState({
