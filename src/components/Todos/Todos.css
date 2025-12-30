@@ -1,5 +1,6 @@
 .todos-container {
-    width: 100%;
+    min-width: 900px;
+    max-width: 900px;
     display: flex;
     flex-direction: column;
     padding: 20px;

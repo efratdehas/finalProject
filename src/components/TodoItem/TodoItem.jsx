@@ -4,14 +4,17 @@ import { UserContext } from '../../context/UserContext';
 import './TodoItem.css';
 
 const TodoItem = ({ todo, onDelete }) => {
+    // שליפת המשתמש הנוכחי והפונקציות לעדכון המשימות מהקונטקסטים
     const { currentUser } = UserContext();
     const { setAllTodos, setDataChanged } = TodosContext();
 
+    // מצב מקומי לניהול עריכה של המשימה
     const [editState, setEditState] = useState({
         isEditing: !todo.id,
         editValue: todo.title || ''
     });
 
+    // פונקציה לשמירת השינויים במשימה
     const handleSave = async () => {
         if (!editState.editValue.trim()) return;
 
@@ -46,10 +49,11 @@ const TodoItem = ({ todo, onDelete }) => {
             }
         } catch (err) {
             console.error("Save failed:", err);
+            alert("Somesing went wrong. Please try again later.");
         }
     };
 
-
+    // פונקציה לביטול העריכה
     const handleCancel = () => {
         if (!todo.id) {
             onDelete(null);
@@ -58,6 +62,7 @@ const TodoItem = ({ todo, onDelete }) => {
         }
     };
 
+    // פונקציה לשינוי סטטוס המשימה
     const handleToggleStatus = async () => {
         if (!todo.id) return;
 
@@ -80,14 +85,18 @@ const TodoItem = ({ todo, onDelete }) => {
             }
         } catch (err) {
             console.error("Failed to update status:", err);
+            alert("Somesing went wrong. Please try again later.");
         }
     };
 
+
     return (
         <div className={`todo-item ${editState.isEditing ? 'editing-mode' : ''}`}>
+            {/* תוכן המשימה עם אפשרות עריכה */}
             <div className="todo-content">
                 {!editState.isEditing && <input type="checkbox" checked={todo.completed} onChange={handleToggleStatus} />}
 
+                <span className="todo-id">#{todo.id}</span>
                 {editState.isEditing ? (
                     <input
                         type="text"
@@ -101,6 +110,7 @@ const TodoItem = ({ todo, onDelete }) => {
                 )}
             </div>
 
+            {/* פעולות המשימה: שמירה, ביטול, עריכה ומחיקה */}
             <div className="todo-actions">
                 {editState.isEditing ? (
                     <>

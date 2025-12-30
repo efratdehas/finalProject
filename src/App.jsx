@@ -61,6 +61,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { UserProvider, UserContext } from './context/UserContext';
 import { TodosProvider } from './context/TodosContext';
+import { PostsProvider } from './context/PostsContext';
 
 import Login from './components/Login/Login'
 import Register from './components/Register/Register'
@@ -93,7 +94,7 @@ function AppRoutes() {
       >
         <Route index element={<h1 style={{ color: '#6d0f0f' }}>Hi, {currentUser?.name || 'User'}!</h1>} />
         <Route path="todos" element={<TodosProvider><Todos /></TodosProvider>}/>
-        <Route path="posts" element={<Posts />} />
+        <Route path="posts" element={<PostsProvider><Posts /></PostsProvider>} />
         <Route path="albums" element={<Albums />} />
         <Route path="info" element={<Info />} />
         <Route path="info/edit" element={<UserDetailsForm isNewUser={false} />} />

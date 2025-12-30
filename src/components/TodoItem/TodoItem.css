@@ -87,3 +87,10 @@
     display: flex;
     gap: 8px;
 }
+
+.todo-id {
+    font-weight: bold;
+    color: #a05151;
+    margin-right: 15px;
+    min-width: 35px;
+}

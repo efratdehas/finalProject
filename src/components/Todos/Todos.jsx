@@ -51,7 +51,12 @@ const Todos = () => {
 
     // פונקציה למיון הנתונים לפי קריטריון מסוים
     const sortData = (data, criteria) => {
-        return [...data].sort((a, b) => a[criteria] < b[criteria] ? -1 : 1);
+        return [...data].sort((a, b) => {
+            if (criteria === 'id') {
+                return parseInt(a.id) - parseInt(b.id);
+            }
+            return a[criteria] < b[criteria] ? -1 : 1;
+        });
     };
 
     // פונקציה לטיפול בחיפוש
@@ -141,6 +146,7 @@ const Todos = () => {
                 </button>
             </header>
 
+            {/* רשימת המשימות */}
             <div className="todos-list">
                 {displayState.displayedTodos.length > 0 ? (
                     displayState.displayedTodos.map((todo, index) => (
