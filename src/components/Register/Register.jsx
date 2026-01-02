@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import { useFetch } from '../../context/useFetch';
 import './Register.css';
 
 const Register = () => {
-
     const navigate = useNavigate();
     const { setCurrentUser } = UserContext();
+    
+    // שליפת הכלים מההוק בשורה הראשונה
+    const { isLoading, sendRequest } = useFetch();
 
-    // Local state to manage form inputs and validation errors
     const [formData, setFormData] = useState({
         userName: '',
         password: '',
@@ -16,48 +18,44 @@ const Register = () => {
         error: ''
     });
 
-    // Update local state on every keystroke
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({ ...formData, [name]: value });
+        setFormData({ ...formData, [name]: value, error: '' });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Basic validation: ensure no fields are empty
+        // ולדציה בסיסית
         if (!formData.userName || !formData.password || !formData.verifyPassword) {
             setFormData({ ...formData, error: 'Please fill all fields' });
             return;
         }
 
-        // Validation: check if password and confirmation match
         if (formData.password !== formData.verifyPassword) {
             setFormData({ ...formData, error: 'Passwords do not match' });
             return;
         }
 
         try {
-            // Check if the username is already taken by querying the server
-            const res = await fetch(`http://localhost:3000/users?username=${formData.userName}`);
-            const existingUsers = await res.json();
+            // בדיקה אם שם המשתמש תפוס באמצעות ההוק הגנרי
+            const existingUsers = await sendRequest(`http://localhost:3000/users?username=${formData.userName}`);
 
-            if (existingUsers.length > 0) {
+            if (existingUsers && existingUsers.length > 0) {
                 setFormData({ ...formData, error: 'Username already exists!' });
                 return;
             }
 
-            // Temporarily save basic info to global state before moving to Step 2
+            // שמירה זמנית של הפרטים ומעבר לשלב הבא
             setCurrentUser({
                 username: formData.userName,
                 website: formData.password
             });
 
-            // Navigate to the extended info form (Step 2)
             navigate('/register/info');
 
         } catch (error) {
-            console.error('Error during registration process:', error);
+            // השגיאה כבר מטופלת בתוך useHttp, אבל כאן אנחנו מעדכנים את ה-UI המקומי
             setFormData({ ...formData, error: 'An error occurred. Please try again later.' });
         }
     };
@@ -66,13 +64,13 @@ const Register = () => {
         <div className="signupContainer">
             <h2>Sign Up</h2>
             <form onSubmit={handleSubmit}>
-
                 <input
                     type="text"
                     name="userName"
                     placeholder="User Name"
                     value={formData.userName}
                     onChange={handleChange}
+                    required
                 />
 
                 <input
@@ -81,6 +79,7 @@ const Register = () => {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
+                    required
                 />
 
                 <input
@@ -89,15 +88,19 @@ const Register = () => {
                     placeholder="Verify Password"
                     value={formData.verifyPassword}
                     onChange={handleChange}
+                    required
                 />
 
-                <button type="submit">Sign Up</button>
-
+                {/* הכפתור מנוטרל בזמן טעינה */}
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Checking...' : 'Sign Up'}
+                </button>
             </form>
-            <p>
-                {/* Display validation or server errors if they exist */}
+            
+            <p className="error-container">
                 {formData.error && <span className="error">{formData.error}</span>}
             </p>
+            
             <p>
                 Already have an account?{' '}
                 <button type="button" onClick={() => navigate('/login')}>Login</button>

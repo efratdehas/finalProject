@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
+import { useFetch } from '../../context/useFetch'; // ייבוא ההוק שלך
 import './UserDetailsForm.css';
 
 const UserDetailsForm = ({ isNewUser }) => {
-
     const navigate = useNavigate();
     const { currentUser, setCurrentUser } = UserContext();
 
-    // Initialize state with currentUser props or empty values
+    // שליפת הכלים מההוק
+    const { isLoading, sendRequest } = useFetch();
+
     const [formData, setFormData] = useState({
         id: currentUser?.id || '',
         name: currentUser?.name || '',
@@ -32,13 +34,12 @@ const UserDetailsForm = ({ isNewUser }) => {
             bs: currentUser?.company?.bs || ''
         }
     });
+
     const [message, setMessage] = useState(null);
 
-    // Handle input changes for both top-level and nested properties
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        // Support for nested object updates (e.g., name="address.city")
         if (name.includes('.')) {
             const [parent, child, grandChild] = name.split('.');
             setFormData(prev => {
@@ -64,51 +65,44 @@ const UserDetailsForm = ({ isNewUser }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        let dataToSend = { ...formData };
-
+        let url, method, body;
         if (isNewUser) {
-            delete dataToSend.id;
+            url = 'http://localhost:3000/users';
+            method = 'POST';
+            const { id, ...dataWithoutId } = formData;
+            body = dataWithoutId;
+        } else {
+            url = `http://localhost:3000/users/${formData.id}`;
+            method = 'PATCH';
+            body = formData;
         }
 
         try {
-            const url = isNewUser ? 'http://localhost:3000/users' : `http://localhost:3000/users/${formData.id}`;
-            const method = isNewUser ? 'POST' : 'PATCH';
+            const savedUser = await sendRequest(url, method, body);
 
-            const response = await fetch(url, {
-                method: method,
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dataToSend)
-            });
-
-            if (response.ok) {
-                const savedUser = await response.json();
-
-                // Synchronize global state and storage
+            if (savedUser) {
                 setCurrentUser(savedUser);
                 localStorage.setItem('currentUser', JSON.stringify(savedUser));
-
                 setMessage(isNewUser ? 'Registration successful!' : 'Profile updated!');
 
                 setTimeout(() => {
                     setMessage(null);
-                    isNewUser ? navigate(`/users/${savedUser.id}`) : navigate(`/users/${savedUser.id}/info`);
+                    const targetPath = isNewUser
+                        ? `/users/${savedUser.id}`
+                        : `/users/${savedUser.id}/info`;
+                    navigate(targetPath);
                 }, 1000);
-
             }
         } catch (err) {
-            console.error("Submission error:", err);
-
             setMessage('An error occurred. Please try again.');
-
-            setTimeout(() => {
-                setMessage(null);
-            }, 1000);
+            setTimeout(() => setMessage(null), 1000);
         }
     };
 
     return (
         <div className="form-container">
-            {(message &&
+            {/* הצגת הודעת טעינה או שגיאה מההוק במידה וצריך */}
+            {(message) && (
                 <div className="overlay">
                     <div className="small-square">
                         <p>{message}</p>
@@ -151,7 +145,15 @@ const UserDetailsForm = ({ isNewUser }) => {
                     <input name="company.catchPhrase" value={formData.company?.catchPhrase} placeholder="Catchphrase" onChange={handleChange} />
                 </section>
 
-                <button type="submit">{isNewUser ? 'Finish Registration' : 'Save Changes'}</button>
+                <div className="form-buttons">
+                    {!isNewUser && <button disabled={isLoading} onClick={() => navigate(`/users/${currentUser.id}/info`)}>Cancel</button>}
+                    <button type="submit" disabled={isLoading}>
+                        {isLoading ?
+                            'Loading...'
+                            :
+                            (isNewUser ? 'Finish Registration' : 'Save Changes')}
+                    </button>
+                </div>
             </form>
         </div>
     );

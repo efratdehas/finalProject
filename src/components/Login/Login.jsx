@@ -1,17 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserContext } from '../../context/UserContext';
+import { useFetch } from '../../context/useFetch';
 import './Login.css';
 
 const Login = () => {
 
     const navigate = useNavigate();
     const { setCurrentUser } = UserContext();
+    const { isLoading, error, data, sendRequest } = useFetch();
 
     // Local state to manage credentials and authentication feedback
     const [formData, setFormData] = useState({
         username: '',
-        password:'',
+        password: '',
         error: null
     });
 
@@ -27,11 +29,9 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            // Fetch user from local server filtering by username
-            const response = await fetch(`http://localhost:3000/users?username=${formData.username}`);
-            const users = await response.json();
+            const users = await sendRequest(`http://localhost:3000/users?username=${formData.username}`);
 
-            if (users.length > 0) {
+            if (users && users.length > 0) {
                 const user = users[0];
 
                 // Verify password (represented by the 'website' field in this project)
@@ -53,19 +53,18 @@ const Login = () => {
                     return;
                 }
             }
-        } catch (error) {
+            setFormData({ ...formData, error: 'Invalid username or password' });
+        } catch (err) {
             console.error('Error connecting to server: ', error);
 
-            setMessage('An error occurred. Please try again.');
+            setMessage('Something went wrong. Please try again.');
 
             setTimeout(() => {
                 setMessage(null);
             }, 1000);
         }
 
-        // Display error message if authentication fails
-        setFormData({ ...formData, error: 'Invalid username or password' });
-    }
+    };
 
     return (
         <div className="loginContainer">
@@ -97,8 +96,9 @@ const Login = () => {
                     onChange={handleChange}
                 />
 
-                <button type="submit">Login</button>
-
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Checking...' : 'Login'}
+                </button>
             </form>
             <p>
                 {/* Conditional rendering for authentication errors */}

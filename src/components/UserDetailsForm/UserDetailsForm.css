@@ -96,7 +96,7 @@
     opacity: 0.8;
 }
 
-.form-container button[type="submit"] {
+.form-buttons button {
     padding: 16px 0;
     background-color: #6d0f0f;
     color: #ffffff;
@@ -110,7 +110,7 @@
     box-shadow: 0 4px 10px rgba(109, 15, 15, 0.2);
 }
 
-.form-container button[type="submit"]:hover {
+.form-buttons button:hover {
     background-color: #a05151;
     transform: scale(1.02);
     box-shadow: 0 6px 15px rgba(160, 81, 81, 0.3);
@@ -165,4 +165,13 @@
     background-color: #6d0f0f;
     color: #ffffff;
     box-shadow: 0 4px 8px rgba(109, 15, 15, 0.2);
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    /* gap: 15px; */
+}
+.form-buttons button {
+    width: 48%;
 }

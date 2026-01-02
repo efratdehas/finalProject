@@ -1,13 +1,29 @@
-import { useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate, Outlet } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import './Home.css';
 
 const Home = () => {
     const navigate = useNavigate();
-    const { currentUser } = UserContext();
+    const { id } = useParams();
+    const { currentUser, isMenuOpen, setIsMenuOpen } = UserContext();
 
-    const [isMenuOpen, setIsMenuOpen] = useState(true);
+    useEffect(() => {
+        const currentUserId = String(currentUser?.id);
+        const urlId = String(id);
+
+        if (currentUser && urlId !== currentUserId) {
+
+            const correctedPath = location.pathname.replace(
+                `/users/${urlId}`,
+                `/users/${currentUserId}`
+            );
+            if (correctedPath !== location.pathname) {
+                console.log("Fixing URL ID...");
+                navigate(correctedPath, { replace: true });
+            }
+        }
+    }, [id, currentUser?.id, navigate, location.pathname]);
 
     const handleLogout = () => {
         localStorage.removeItem('currentUser');

@@ -1,9 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom'
 import { UserContext } from './../../context/UserContext';
 import { PostsContext } from '../../context/PostsContext';
 import './Posts.css';
 
 const Posts = () => {
+    const navigate = useNavigate();
     // שליפת הנתונים הנצרכים מהקונטקסט
     const { currentUser } = UserContext();
     const { othersPosts, setOthersPosts, myPosts, setMyPosts, dataChanged, setDataChanged } = PostsContext();
@@ -137,13 +139,13 @@ const Posts = () => {
                     <button className={displayState.viewMode === 'others' ? 'active' : ''} onClick={() => handleModeChange('others')}>Others</button>
                 </div>
 
-                <button className="add-todo-btn" onClick={() => { }}>Add New Post</button>
+                <button className="add-todo-btn" onClick={() => navigate('new-post')}>Add New Post</button>
             </header>
 
             {/* רשימת הפוסטים */}
             <div className="posts-list">
                 {displayState.displayedPosts.map(post => (
-                    <div key={post.id} className="post-item">
+                    <div key={post.id} className="post-item" onDoubleClick={() => navigate(`./${post.id}`)}>
                         <span className="post-id">#{post.id}</span>
                         <div className="post-info">
                             <span className="post-title">{post.title}</span>

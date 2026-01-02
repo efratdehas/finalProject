@@ -8,8 +8,10 @@ export const UserProvider = ({ children }) => {
         return savedUser ? JSON.parse(savedUser) : null;
     });
 
+    const [isMenuOpen, setIsMenuOpen] = useState(true);
+
     return (
-        <context.Provider value={{ currentUser, setCurrentUser }}>
+        <context.Provider value={{ currentUser, setCurrentUser, isMenuOpen, setIsMenuOpen }}>
             {children}
         </context.Provider>
     );
