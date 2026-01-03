@@ -170,7 +170,6 @@
 .form-buttons {
     display: flex;
     justify-content: space-between;
-    /* gap: 15px; */
 }
 .form-buttons button {
     width: 48%;

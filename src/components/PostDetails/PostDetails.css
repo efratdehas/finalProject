@@ -66,8 +66,7 @@
 }
 
 .edit-btn,
-.delete-btn-detail,
-.save-btn {
+.delete-btn-detail {
     width: 45px;
     height: 45px;
     border-radius: 12px;

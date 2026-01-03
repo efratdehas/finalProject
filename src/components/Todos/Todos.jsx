@@ -4,6 +4,7 @@ import { UserContext } from '../../context/UserContext';
 import { useTodos } from '../../context/TodosContext';
 import useFilterAndSort from '../../context/useFilterAndSort';
 import TodoItem from '../TodoItem/TodoItem';
+import { AddButton, FilterBar } from '../UI/UI.jsx';
 import './Todos.css';
 
 const Todos = () => {
@@ -41,37 +42,15 @@ const Todos = () => {
     return (
         <div className={'todos-container' + (todoId ? ' disabled-view' : '')}>
             <header className="todos-header">
-                <div className="search-bar">
-                    <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                        <option value="id">ID</option>
-                        <option value="title">Title</option>
-                        <option value="completed">Execution</option>
-                    </select>
+                <FilterBar
+                    criteria={['title', 'id', 'completed']}
+                    search={search}
+                    setSearch={setSearch}
+                    sortBy={sortBy}
+                    setSortBy={setSortBy}
+                />
 
-                    <div className="search-input-wrapper">
-                        <input
-                            type="text"
-                            placeholder={`Search by ${search.field}...`}
-                            value={search.query}
-                            onChange={(e) => setSearch(prev => ({ ...prev, query: e.target.value }))}
-                        />
-                        {search.query && (
-                            <button
-                                className="clear-btn"
-                                onClick={() => setSearch(prev => ({ ...prev, query: '' }))}
-                            >X</button>
-                        )}
-                    </div>
-
-                    <button
-                        className="swich-btn"
-                        onClick={() => setSearch(prev => ({ ...prev, fieldNumber: (prev.fieldNumber + 1) % 3 }))}
-                    >🔄</button>
-                </div>
-
-                <button className="add-todo-btn" onClick={handleNewTodo}>
-                    Add New Todo
-                </button>
+                <AddButton type="Todo" onClick={handleNewTodo} />
             </header>
 
             <div className="todos-list">

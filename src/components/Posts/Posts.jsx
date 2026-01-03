@@ -1,159 +1,64 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom'
-import { UserContext } from './../../context/UserContext';
-import { PostsContext } from '../../context/PostsContext';
+import { useEffect, useState, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../../context/UserContext';
+import { usePosts } from '../../context/PostsContext';
+import useFilterAndSort from '../../context/useFilterAndSort';
+import { AddButton, FilterBar } from '../UI/UI.jsx';
 import './Posts.css';
 
 const Posts = () => {
     const navigate = useNavigate();
-    // שליפת הנתונים הנצרכים מהקונטקסט
     const { currentUser } = UserContext();
-    const { othersPosts, setOthersPosts, myPosts, setMyPosts, dataChanged, setDataChanged } = PostsContext();
+    const { posts, fetchPosts, isLoading } = usePosts();
+    const [viewMode, setViewMode] = useState('all');
 
-    // מצב מקומי לניהול תצוגת הפוסטים, מיון, חיפוש ומצב צפייה
-    const [displayState, setDisplayState] = useState({
-        displayedPosts: [],
-        sortBy: 'id',
-        searchQuery: '',
-        viewMode: 'all'
-    });
-
-    // פונקציה למיון הנתונים לפי קריטריון מסוים
-    const sortData = useCallback((data, criteria) => {
-        if (!data) return [];
-        return [...data].sort((a, b) => {
-            if (criteria === 'id') return parseInt(a.id) - parseInt(b.id);
-            return String(a[criteria]).localeCompare(String(b[criteria]), undefined, { numeric: true });
-        });
-    }, []);
-
-    // פונקציה לקבלת מקור הנתונים בהתאם למצב הצפייה
-    const getSourceByMode = useCallback((currentMode, mPosts, oPosts) => {
-        let src = [];
-        if (currentMode === 'all') src = [...mPosts, ...oPosts];
-        else if (currentMode === 'mine') src = mPosts;
-        else src = oPosts;
-        return src;
-    }, []);
-
-    // פונקציה לטיפול בחיפוש ועדכון התצוגה
-    const handleSearch = (newMode) => {
-        const mode = newMode || displayState.viewMode;
-        const source = getSourceByMode(mode, myPosts, othersPosts);
-        const filtered = source.filter(post =>
-            (post.title || "").toLowerCase().includes(displayState.searchQuery.toLowerCase())
-        );
-        if (newMode)
-            setDisplayState(prev => ({
-                ...prev,
-                displayedPosts: sortData(filtered, prev.sortBy),
-                viewMode: newMode
-            }));
-        else
-            setDisplayState(prev => ({
-                ...prev,
-                displayedPosts: sortData(filtered, prev.sortBy)
-            }));
-    };
-
-    // שינוי סוג המיון 
-    const handleSortChange = (e) => {
-        const newSortBy = e.target.value;
-        setDisplayState(prev => ({
-            ...prev,
-            sortBy: newSortBy,
-            displayedPosts: sortData(prev.displayedPosts, newSortBy)
-        }));
-    };
-
-    // שינוי מצב הצפייה
-    const handleModeChange = (newMode) => {
-        handleSearch(newMode);
-    };
-
-    // שליפת הפוסטים מהשרת בעת טעינת הקומפוננטה או שינוי המשתמש הנוכחי
     useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const res = await fetch('http://localhost:3000/posts');
-                const data = await res.json();
+        fetchPosts();
+    }, [fetchPosts]);
 
-                const mine = data.filter(p => p.userId == currentUser.id);
-                const others = data.filter(p => p.userId != currentUser.id);
+    // סינון ראשוני לפי מצב הצפייה (שלי/של כולם)
+    const filteredByMode = useMemo(() => {
+        if (viewMode === 'mine') return posts.filter(p => p.userId == currentUser.id);
+        if (viewMode === 'others') return posts.filter(p => p.userId != currentUser.id);
+        return posts;
+    }, [posts, viewMode, currentUser.id]);
 
-                setMyPosts(mine);
-                setOthersPosts(others);
+    const {
+        search,
+        setSearch,
+        sortBy,
+        setSortBy,
+        sortedData
+    } = useFilterAndSort(filteredByMode, ['title', 'id']);
 
-                setDisplayState(prev => ({
-                    ...prev,
-                    displayedPosts: sortData(data, prev.sortBy)
-                }));
-            } catch (err) {
-                console.error("Failed to fetch posts:", err);
-                alert("Something went wrong. Please try again later.");
-            }
-        };
-        if (currentUser?.id) fetchPosts();
-    }, [currentUser?.id, setMyPosts, setOthersPosts, sortData]);
-
-    // עדכון התצוגה כאשר יש שינוי בנתונים הגלובליים
-    useEffect(() => {
-        if (dataChanged) {
-            handleSearch();
-            setDataChanged(false);
-        }
-    }, [dataChanged, setDataChanged]);
+    if (isLoading) return <div>Loading...</div>;
 
     return (
         <div className="posts-container">
-            {/* כותרת עם כלי חיפוש, מיון ובחירת מצב צפייה */}
             <header className="posts-header">
-                <div className="search-bar">
-                    <select value={displayState.sortBy} onChange={handleSortChange}>
-                        <option value="id">ID</option>
-                        <option value="title">Title</option>
-                    </select>
-
-                    {/* שדה חיפוש עם כפתור ניקוי */}
-                    <div className="search-input-wrapper">
-                        <input
-                            type="text"
-                            placeholder="Search..."
-                            value={displayState.searchQuery}
-                            onChange={(e) => setDisplayState(prev => ({ ...prev, searchQuery: e.target.value }))}
-                        />
-                        {displayState.searchQuery && (
-                            <button className="clear-btn" onClick={() => {
-                                setDisplayState(prev => ({ ...prev, searchQuery: '' }));
-                                setDataChanged(true);
-                            }}>X</button>
-                        )}
-                    </div>
-                    <button className='search-btn' onClick={handleSearch}>Search</button>
-                </div>
-
-                {/* כפתורי בחירת מצב צפייה */}
+                <FilterBar
+                    criteria={['title', 'id']}
+                    search={search} setSearch={setSearch}
+                    sortBy={sortBy} setSortBy={setSortBy}
+                />
+                
                 <div className="view-toggle-btns">
-                    <button className={displayState.viewMode === 'all' ? 'active' : ''} onClick={() => handleModeChange('all')}>All</button>
-                    <button className={displayState.viewMode === 'mine' ? 'active' : ''} onClick={() => handleModeChange('mine')}>Mine</button>
-                    <button className={displayState.viewMode === 'others' ? 'active' : ''} onClick={() => handleModeChange('others')}>Others</button>
+                    <button className={viewMode === 'all' ? 'active' : ''} onClick={() => setViewMode('all')}>All</button>
+                    <button className={viewMode === 'mine' ? 'active' : ''} onClick={() => setViewMode('mine')}>Mine</button>
+                    <button className={viewMode === 'others' ? 'active' : ''} onClick={() => setViewMode('others')}>Others</button>
                 </div>
 
-                <button className="add-todo-btn" onClick={() => navigate('new-post')}>Add New Post</button>
+                <AddButton type="Post" onClick={() => navigate('new-post')} />
             </header>
 
-            {/* רשימת הפוסטים */}
             <div className="posts-list">
-                {displayState.displayedPosts.map(post => (
+                {sortedData.map(post => (
                     <div key={post.id} className="post-item" onDoubleClick={() => navigate(`./${post.id}`)}>
                         <span className="post-id">#{post.id}</span>
-                        <div className="post-info">
-                            <span className="post-title">{post.title}</span>
-                        </div>
-                        <span className="post-author">{post.userId == currentUser.id ? "(Me)" : `(User ${post.userId})`}</span>
+                        <span className="post-title">{post.title}</span>
+                        <span className="post-author">{post.userId == currentUser.id ? "(Me)" : ''}</span>
                     </div>
                 ))}
-                {displayState.displayedPosts.length === 0 && <p className="no-results">No posts found...</p>}
             </div>
         </div>
     );

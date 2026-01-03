@@ -9,6 +9,9 @@ const useFilterAndSort = (data = [], type = []) => {
 
     const currentField = useMemo(() => type[search.fieldNumber], [type, search.fieldNumber]);
 
+    const changeFiled = () => {
+        setSearch(prev => ({ ...prev, fieldNumber: (prev.fieldNumber + 1) % type.length }))
+    };
     // 🔹 פונקציית מיון טהורה (אפשר להפעיל ידנית)
     const sortData = (inputData) => {
         if (!inputData) return [];
@@ -28,7 +31,7 @@ const useFilterAndSort = (data = [], type = []) => {
         if (!data) return [];
         if (!search.query) return data;
         return data.filter(item =>
-            String(item[search.field] || "").toLowerCase().includes(search.query.toLowerCase())
+            String(item[currentField] || "").toLowerCase().includes(search.query.toLowerCase())
         );
     };
 
@@ -38,10 +41,10 @@ const useFilterAndSort = (data = [], type = []) => {
         if (search.query) 
             filtered = filterData(data);
         return sortData(filtered);
-    }, [data, sortBy, search.query]);
+    }, [data, sortBy, search.query, currentField]);
 
     return {
-        search: { ...search, field: currentField }, 
+        search: { query: search.query, field: currentField, changeFiled: changeFiled }, 
         setSearch,
         sortBy, setSortBy,
         filterData,

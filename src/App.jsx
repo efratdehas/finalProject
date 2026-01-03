@@ -58,4 +58,11 @@ function App() {
   );
 }
 
+// import {FilterBar} from './components/UI/UI.jsx';
+// function App() {
+//   return (
+//         <FilterBar Criteria={['title, ID, jj']}/>
+//   );
+// }
+
 export default App;

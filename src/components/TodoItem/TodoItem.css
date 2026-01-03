@@ -73,16 +73,6 @@
     background-color: #ffffff;
 }
 
-.save-btn {
-    color: #28a745;
-    font-weight: bold;
-}
-
-.cancel-btn {
-    color: #dc3545;
-    font-weight: bold;
-}
-
 .todo-actions {
     display: flex;
     gap: 8px;

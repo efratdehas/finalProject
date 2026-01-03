@@ -31,6 +31,7 @@ function todosReducer(state, action) {
                     t.id === action.todo.id ? action.todo : t
                 )
             };
+
         case 'DELETE_TODO':
             return {
                 ...state,
@@ -67,10 +68,7 @@ export const TodosProvider = ({ children }) => {
 
     const saveTodo = async (todo) => {
         const isNew = !todo.id;
-        const url = isNew
-            ? 'http://localhost:3000/todos'
-            : `http://localhost:3000/todos/${todo.id}`;
-
+        const url = isNew ? 'http://localhost:3000/todos' : `http://localhost:3000/todos/${todo.id}`;
         const method = isNew ? 'POST' : 'PUT';
 
         const saved = await sendRequest(url, method, todo);
